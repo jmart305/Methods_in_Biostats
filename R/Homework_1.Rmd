@@ -1,0 +1,26 @@
+---
+title: "Homework 1"
+author: "Julia Martin"
+date: "9/6/2024"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+## Problem 6c  
+
+```{r}
+set.seed(6)
+# Draw n = 1000 from the uniform distribution
+uniform <- runif(1000,0,1)
+# Define inverse CDF for Weibull distribution
+weibull_inv_cdf <- function(u, beta, gamma) {
+  (-beta*log(1-u))^(1/gamma)
+}
+# plug in uniform distribution sample to inverse CDF
+weibull_dist <- weibull_inv_cdf(uniform, 5, 2)
+head(weibull_dist)
+# show results in a histogram
+hist(weibull_dist, main = "Weibull Distribution", xlab = "x")
+```
+
