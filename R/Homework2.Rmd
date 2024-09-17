@@ -1,0 +1,27 @@
+---
+title: "Homework_2"
+output: html_document
+date: "2024-09-17"
+---
+
+### Problem 3b 
+
+```{r}
+score <- c("0-5","6-10","11-15","16-20","21-25","26-30")
+no_diag <- c(0,0,3,9,16,18)
+yes_diag <- c(2,1,4,5,3,1)
+
+CMMS <- data.frame(matrix(nrow=6,ncol=3))
+CMMS[,1] <- score
+CMMS[,2] <- no_diag
+CMMS[,3] <- yes_diag
+CMMS[,4] <- c(rep(0,6))
+CMMS[,5] <- c(1,rep(0,5))
+CMMS[,6] <- c(1,1,rep(0,4))
+CMMS[,7] <- c(1,1,1,0,0,0)
+CMMS[,8] <- c(1,1,1,1,0,0)
+CMMS[,9] <- c(1,1,1,1,1,0)
+CMMS[,10] <- c(rep(1,6))
+colnames(CMMS) <- c("score","diag_no","diag_yes","cutpoint<=0","cutpoint<=5","cutpoint<=10","cutpoint<=15","cutpoint<=20","cutpoint<=25","cutpoin<=30")
+```
+
