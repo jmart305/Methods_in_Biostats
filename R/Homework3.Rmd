@@ -1,10 +1,11 @@
 ---
-title: "Homework3"
+title: "Homework 3"
 output: html_document
 date: "2024-09-30"
+author: "Julia Martin"
 ---
 
-### Problem 1b  
+### Part 1b  
 
 ```{r}
 likelihood <- function(p) {
@@ -19,7 +20,180 @@ x <- seq(0,1,0.01)
 y <- renormalizing_constant*likelihood(x)
 lplot <- data.frame(cbind(x,y))
 ggplot(lplot, aes(x, y)) +
-  geom_line() + xlab("Probability") + ylab("Likelihood") + ggtitle("Likelihood Function for Flip Scenario")
+  geom_line() + xlab("Probability") + ylab("Likelihood") + ggtitle("Likelihood Function for Part a")
 ```
 
 This likelihood suggests that the coin is not fair, since the likelihood function plot is right skewed, meaning there is a higher likelihood of the probability of flipping heads to be greater than 0.5, meaning that the coin is not fair.  
+
+### Part 1c
+
+```{r}
+p_value <- choose(10,0)*0.5^10 + choose(10,1)*0.5^10 + choose(10,2)*0.5^10 + choose(10,3)*0.5^10
+p_value
+```
+
+### Part 1e  
+
+```{r}
+y <- 10
+likelihood2 <- function(p) {
+  y <- 10
+  choose(y-1,2) * ((1-p)^3) * (p^(y-3))
+}
+phat <- 7/10
+max_likelihood <- likelihood2(phat)
+# renormalize:
+renormalizing_constant <- 1 / likelihood2(phat)
+
+x <- seq(0,1,0.01)
+y <- likelihood2(x)
+lplot <- data.frame(cbind(x,y))
+ggplot(lplot, aes(x, y)) +
+  geom_line() + xlab("Probability") + ylab("Likelihood") + ggtitle("Likelihood Function for Part e")
+```
+
+### Problem 1f  
+
+```{r}
+p_value <- 1 - choose(8,2)*0.5^9 - choose(7,2)*0.5^8 - choose(6,2)*0.5^7 - choose(5,2)*0.5^6 - choose(4,2)*0.5^5 - choose(3,2)*0.5^4 - choose(2,2)*0.5^3
+p_value
+```
+
+### Problem 2a
+
+```{r}
+pnorm(90, 80, 12)
+```
+
+The probability that a randomly selected person from this population has DBP less than 90 is 0.52768.  
+
+### Problem 2b  
+
+```{r}
+qnorm(0.9, 80, 12)
+qnorm(0.95, 80, 12)
+qnorm(0.975, 80, 12)
+```
+
+90th percentile: 95.37862
+95th percentile: 99.73824
+97.5th percentile: 103.5196
+
+### Problem 2c  
+
+```{r}
+# 1 standard deviation above the population for SBP:
+120 + 11
+1 - pnorm(131,120,11)
+
+# 1 standard deviation above the population for DBP:
+80 + 12
+1 - pnorm(92, 80, 12)
+```
+
+The probability of a random person having a SBP 1, 2, or 3 standard deviations above the mean of 120 is 0.1586553. For DBP, it is the same probability, 0.1586553.  
+
+### Problem 2d  
+
+```{r}
+# can be modeled using a binomial distribution
+# probability of success:
+p <- 1 - pnorm(140,120,11)
+dbinom(5, 10, p)
+```
+
+### Problem 2e  
+
+```{r}
+dbinom(500, 1000, p)
+```
+
+### Problem 2f  
+
+```{r}
+(1 - pnorm(90, 80, 12)) * (1 - pnorm(140, 120, 11))
+```
+
+The probability that someone has an SBP greater than 140 and DBP greater than 90 is 0.006984006. Independence is probably not a good assumption because there is a very small chance of both of these events occurring under independence, when in reality they are most likely correlated. 
+
+### Problem 2g  
+
+```{r}
+# I am calculating the probability that the average DBP is smaller than 81.3
+# I can use the central limit theorem because the probability of the normalized sample mean converges to the standard normal distribution  
+Z <- (81.3 - 80) / (12/sqrt(200))
+pnorm(Z, 0 , 1)
+```
+
+The probability that this average is smaller than 81.3 is 0.006984006.  
+
+### Problem 3a  
+
+```{r}
+set.seed(7)
+exp_sample <- rexp(1000,1)
+mean(exp_sample)
+var(exp_sample)
+```
+
+The sample mean should estimate $\mu$, the population mean, and the sample variance should estimate $\sigma^2$, the population variance. This is because of the law of large numbers, which states that these sample statistics converge in probability to the population parameters as n (sample size) increases.  
+
+### Problem 3b  
+
+```{r}
+seq_sample <- data.frame(cbind(cumsum(exp_sample) / 1:1000, 1:1000))
+colnames(seq_sample) <- c("Sample_Mean", "n")
+ggplot(seq_sample, aes(n, Sample_Mean)) + 
+  geom_line(cex=0.7, color = "purple") + ggtitle("Sequential Sample Means")
+```
+
+This plot shows that as the number of samples increases, the sample mean converges to 1, which is the true mean from which these samples were drawn. This supports the law of large numbers.  
+
+### Problem 3c  
+
+```{r}
+ggplot(data.frame(exp_sample), aes(exp_sample)) + 
+  geom_histogram() + xlab("Exponential Sample Value") + ylab("Frequency") + ggtitle("Histogram of Exponential Sample")
+```
+
+Yes, this histogram looks like an unsmoothed version of an exponential density.  
+
+### Problem 3d  
+
+```{r}
+sample_means <- rep(NA, 1000)
+for (i in 1:1000) {
+  sample_obs <- rexp(100,1) 
+  sample_means[i] <- mean(sample_obs)
+}
+mean(sample_means)
+var(sample_means)
+```
+
+The average of the sample means should be 1 and the variance of the sample means should be 0, which is supported by the data. This is because of the Central Limit Theorem, which states that the distribution of a sample mean, given enough observations, can be approximated by a standard normal distribution with mean 0 and variance 1.  
+
+### Problem 3e  
+
+```{r}
+Z <- (sample_means - 1) / (1/sqrt(1000))
+ggplot(data.frame(Z), aes(Z)) +
+  geom_histogram()
+```
+
+This plot looks like a standard normal distribution, which makes sense because sample means calculated from drawing from a given distribution follow the standard normal distribution.  
+
+***SQRT(100) or 1000***
+
+### Problem 3f  
+
+```{r}
+sample_vars <- rep(NA, 1000)
+for (i in 1:1000) {
+  sample_obs <- rexp(100,1) 
+  sample_vars[i] <- mean(sample_obs)
+}
+mean(sample_vars)
+```
+
+The average of the sample variances is approximately 1, which is the population variance. This illustrates the law of large numbers property, which proves that average of the sample means converges to the population mean, which is a result that can then be used to show that the sample variance converges to the population variances because variance is a function of the sample mean.  
+
