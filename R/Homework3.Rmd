@@ -1,0 +1,25 @@
+---
+title: "Homework3"
+output: html_document
+date: "2024-09-30"
+---
+
+### Problem 1b  
+
+```{r}
+likelihood <- function(p) {
+  p^7*(1-p)^3
+}
+phat <- 0.7
+max_likelihood <- likelihood(phat)
+# renormalize:
+renormalizing_constant <- 1 / likelihood(phat)
+
+x <- seq(0,1,0.01)
+y <- renormalizing_constant*likelihood(x)
+lplot <- data.frame(cbind(x,y))
+ggplot(lplot, aes(x, y)) +
+  geom_line() + xlab("Probability") + ylab("Likelihood") + ggtitle("Likelihood Function for Flip Scenario")
+```
+
+This likelihood suggests that the coin is not fair, since the likelihood function plot is right skewed, meaning there is a higher likelihood of the probability of flipping heads to be greater than 0.5, meaning that the coin is not fair.  
