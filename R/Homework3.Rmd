@@ -1,13 +1,16 @@
 ---
 title: "Homework 3"
-output: html_document
-date: "2024-09-30"
 author: "Julia Martin"
+date: "2024-09-30"
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ### Part 1b
 
 ```{r}
+library(ggplot2)
 likelihood <- function(p) {
   p^7*(1-p)^3
 }
@@ -137,8 +140,10 @@ The probability that someone has an SBP greater than 140 and DBP greater than 90
 ### Problem 2g
 
 ```{r}
-# I am calculating the probability that the average DBP is smaller than 81.3 for sample size of 200
-# I can use the central limit theorem because the probability of the normalized sample mean converges to the standard normal distribution  
+# I am calculating the probability that the average DBP is smaller than 81.3 
+# for sample size of 200
+# I can use the central limit theorem because the probability of the normalized 
+# sample mean converges to the standard normal distribution  
 Z <- (81.3 - 80) / (12/sqrt(200))
 pnorm(Z, 0 , 1)
 ```
@@ -208,20 +213,13 @@ This plot looks like a standard normal distribution, which makes sense because s
 sample_vars <- rep(NA, 1000)
 for (i in 1:1000) {
   sample_obs <- rexp(100,1) 
-  sample_vars[i] <- mean(sample_obs)
+  sample_vars[i] <- var(sample_obs)
 }
 mean(sample_vars)
 ```
 
-The average of the sample variances is approximately 1, which is the population variance. This illustrates the law of large numbers property, which proves that average of the sample means converges to the population mean, which is a result that can then be used to show that the sample variance converges to the population variances because variance is a function of the sample mean.
+This shows that the sample variance converges to the theoretical/population variance (1), which follows from the law of large numbers. This shows that the sample variance is a consistent estimator. We also know that the expectation of the sample variance is the theoretical/population variance, so it is an unbiased estimator too. 
 
 
 
-Problem 6
-
-```{r}
-normal <- rnorm(10000)
-v <- cumsum((normal-mean(normal))^2) / (1:10000 - 2)
-plot(v)
-```
 
